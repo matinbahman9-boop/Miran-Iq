@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>میران IQ - وەشانی پێشکەوتوو</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #0b0f19; color: #f8fafc; text-align: center; padding: 20px; margin: 0; overflow-x: hidden; }
+        .container { max-width: 450px; margin: 20px auto; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #38bdf8; position: relative; }
+        .back-btn { position: absolute; top: 15px; right: 15px; background: #475569; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: none; }
+        .profile-box { background: #111827; padding: 10px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
+        .coin-box { background: #293548; padding: 8px 15px; border-radius: 30px; color: #fbbf24; font-weight: bold; font-size: 18px; }
+        .question-text { font-size: 20px; font-weight: bold; margin: 20px 0; min-height: 60px; color: #f1f5f9; }
+        .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .btn-opt { background: #334155; color: white; border: 2px solid #475569; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; text-align: right; transition: 0.2s; }
+        .btn-opt:hover { background: #38bdf8; color: #0b0f19; }
+        #score-status { margin-top: 15px; font-size: 18px; font-weight: bold; padding: 10px; border-radius: 8px; }
+        .leaderboard-title { color: #fbbf24; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
+        .leaderboard-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1f2937; font-size: 14px; }
+        .rules-list { text-align: right; background: #111827; padding: 15px; border-radius: 12px; margin: 20px 0; border-right: 4px solid #38bdf8; }
+        #kurdistan-splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b0f19; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease-in-out, visibility 0.8s; }
+        @keyframes wave { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.05) rotate(2deg); } }
+        .animated-flag { animation: wave 2s infinite ease-in-out; }
+    </style>
+</head>
+<body>
+
+<div id="kurdistan-splash">
+    <div class="animated-flag" style="width: 100px; height: 60px; border-radius: 5px; overflow: hidden; margin-bottom: 15px; border: 2px solid white;">
+        <div style="background: #ed2024; height: 33.3%;"></div>
+        <div style="background: #ffffff; height: 33.4%; position: relative;">
+            <div style="width: 20px; height: 20px; background: #febc11; border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        </div>
+        <div style="background: #278d45; height: 33.3%;"></div>
+    </div>
+    <h1 style="font-size: 28px; margin: 0;">میران IQ</h1>
+    <p>بژی کوردستان ☀️</p>
+</div>
+
+<div class="container" id="main-content" style="opacity: 0; transition: opacity 0.8s ease-in-out;">
+    <button id="back-btn" class="back-btn" onclick="location.reload()">🔙 گەڕانەوە</button>
+
+    <div class="profile-box">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:20px; height:12px; border-radius:2px; overflow:hidden;">
+                <div style="background:#ed2024; height:33%;"></div><div style="background:#fff; height:34%;"></div><div style="background:#278d45; height:33%;"></div>
+            </div>
+            <span id="player-name" style="color: #38bdf8; font-weight: bold;">مێوان</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <div id="bonus-timer" style="cursor:pointer; font-size:20px;" onclick="claimBonus()">🎁</div>
+            <div class="coin-box">🪙 <span id="coins">50</span></div>
+            <div style="cursor:pointer; font-size:20px;" onclick="toggleLeaderboard()">🏆</div>
+        </div>
+    </div>
+
+    <div id="leaderboard-popup" style="display:none; background:#111827; padding:15px; border-radius:12px; margin-bottom:15px; text-align:right;">
+        <div class="leaderboard-title">🏆 تۆپ ١٠ یاریزان</div>
+        <div id="leaderboard-list"></div>
+    </div>
+    
+    <div id="start-screen">
+        <h2 style="margin-top: 10px;">بەخێربێیت بۆ یاری میران IQ 🧠</h2>
+        <div class="rules-list">
+            <ul>
+                <li>📌 یارییەکە لە کۆمەڵێک پرسیاری بەهێز و هەمەچەشن پێکهاتووە.</li>
+                <li>🪙 تێچووی چوونە ناو یاری ١٠ کۆینە.</li>
+                <li>🎉 بۆ هەر وەڵامێکی ڕاست ١٥ کۆین خەڵات وەردەگریت.</li>
+                <li>❌ ئەگەر وەڵامت هەڵە بێت ٥ کۆین لەدەست دەدەیت.</li>
+            </ul>
+        </div>
+        <button style="background:#f472b6; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size: 18px;" onclick="enterKidsScreen()">🧸 بەشی منداڵان</button>
+        <button style="background:#22c55e; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="enterQuizScreen()">🎮 پرسیار و وەڵامی زیرەکانە</button>
+    </div>
+
+    <div id="quiz-screen" style="display: none;">
+        <div class="question-text" id="question">ئامادەیت بۆ دەستپێکردنی یاری؟</div>
+        <div class="options-grid" id="options-box" style="display: none;">
+            <button class="btn-opt" onclick="checkAnswer(0)" id="opt0">--</button>
+            <button class="btn-opt" onclick="checkAnswer(1)" id="opt1">--</button>
+            <button class="btn-opt" onclick="checkAnswer(2)" id="opt2">--</button>
+        </div>
+        <button id="start-game-btn" style="background:#38bdf8; color:#0b0f19; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="startMegaGame()">🚀 چوونە ناو پرسیارەکان</button>
+        <div id="score-status"></div>
+    </div>
+
+    <div id="kids-screen" style="display: none; text-align: center;">
+        <h2 style="color: #fbbf24;">🌟 بەشی چاوگەشەکان</h2>
+        <img id="kids-image" src="" style="width: 180px; height: 180px; border-radius: 20px; margin: 10px auto; border: 3px solid #38bdf8; display: none; object-fit: cover;">
+        <div class="question-text" id="kids-question">...</div>
+        <div class="options-grid" id="kids-options-box">
+            <button class="btn-opt" onclick="checkKidsAnswer(0)" id="kids-opt0">--</button>
+            <button class="btn-opt" onclick="checkKidsAnswer(1)" id="kids-opt1">--</button>
+            <button class="btn-opt" onclick="checkKidsAnswer(2)" id="kids-opt2">--</button>
+        </div>
+        <div id="kids-status" style="margin-top: 15px; font-size: 18px; font-weight: bold;"></div>
+    </div>
+</div>
+
+<script src="kidsQuestions.js"></script>
+<script src="questions.js"></script>
+<script>
+    const firebaseConfig = { apiKey: "AIzaSyAcrQob4GvbghvQvbVUj1YxZ5xZ_4WYdPc", authDomain: "miraniq-9e398.firebaseapp.com", projectId: "miraniq-9e398", storageBucket: "miraniq-9e398.firebasestorage.app", messagingSenderId: "1047083057053", appId: "1:1047083057053:web:b64324df6d392fc0ad3974" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    let coins = parseInt(localStorage.getItem('userCoins')) || 50;
+    let playerName = localStorage.getItem('playerName') || "";
+    
+    window.onload = function() {
+        if (!playerName) { playerName = prompt("ناوی خۆت بنووسە:") || "یاریزان"; localStorage.setItem('playerName', playerName); }
+        document.getElementById('player-name').innerText = playerName;
+        document.getElementById('coins').innerText = coins;
+        checkBonusStatus();
+        setTimeout(() => { document.getElementById('kurdistan-splash').style.opacity = "0"; document.getElementById('kurdistan-splash').style.visibility = "hidden"; document.getElementById('main-content').style.opacity = "1"; }, 2000);
+    }
+
+    function enterKidsScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('kids-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; loadKidsQuestion(); }
+    function enterQuizScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('quiz-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; }
+
+    function loadKidsQuestion() {
+        let q = kidsQuestionsDatabase[Math.floor(Math.random() * kidsQuestionsDatabase.length)];
+        let imgElement = document.getElementById('kids-image');
+        document.getElementById('kids-question').innerText = q.q;
+        if(q.image) { imgElement.src = q.image; imgElement.style.display = "block"; } else { imgElement.style.display = "none"; }
+        for(let i=0; i<3; i++) document.getElementById('kids-opt'+i).innerText = q.opts[i];
+        window.kidsCorrectAnswer = q.correct;
+    }
+
+    function checkKidsAnswer(idx) {
+        let statusDiv = document.getElementById('kids-status');
+        if(idx === window.kidsCorrectAnswer) {
+            statusDiv.innerHTML = "✅ دەستخۆش!<br><img src='https://media.giphy.com/media/3o7TKMGpxxHOGTdzJC/giphy.gif' style='width:100px; border-radius:10px;'>";
+            statusDiv.style.color = "#22c55e";
+        } else {
+            statusDiv.innerHTML = "❌ بەداخەوە! هەوڵ بدەرەوە<br><img src='https://media.giphy.com/media/l3q2VmU3K2R3i07hS/giphy.gif' style='width:100px; border-radius:10px;'>";
+            statusDiv.style.color = "#ef4444";
+        }
+        setTimeout(() => { statusDiv.innerHTML = ""; loadKidsQuestion(); }, 2000);
+    }
+
+    function checkAnswer(idx) {
+        let statusDiv = document.getElementById('score-status');
+        if(idx === window.correctAnswerIndex) {
+            coins += 15;
+            statusDiv.innerHTML = "🎉 پیرۆزە! ١٥ خاڵت زیاد کرد";
+            statusDiv.style.color = "#22c55e";
+        } else {
+            coins = Math.max(0, coins - 5);
+            statusDiv.innerHTML = "😔 بەداخەوە! ٥ خاڵت کەم کرد";
+            statusDiv.style.color = "#ef4444";
+        }
+        saveData();
+        setTimeout(loadNextUniqueQuestion, 1500);
+    }
+
+    function saveData() { localStorage.setItem('userCoins', coins); document.getElementById('coins').innerText = coins; db.collection("users").doc(playerName).set({name: playerName, coins: coins}); }
+    function startMegaGame() { if(coins < 10) { alert("کۆینی پێویستت نییە!"); return; } coins -= 10; saveData(); document.getElementById('start-game-btn').style.display = "none"; document.getElementById('options-box').style.display = "grid"; loadNextUniqueQuestion(); }
+    function loadNextUniqueQuestion() { let q = megaQuestionsDatabase[Math.floor(Math.random() * megaQuestionsDatabase.length)]; document.getElementById('question').innerText = q.q; for(let i=0; i<3; i++) document.getElementById('opt'+i).innerText = q.opts[i]; window.correctAnswerIndex = q.correct; }
+    
+    function toggleLeaderboard() {
+        let box = document.getElementById('leaderboard-popup');
+        box.style.display = (box.style.display === "none") ? "block" : "none";
+        if(box.style.display === "block") {
+            db.collection("users").orderBy("coins", "desc").limit(10).get().then(snap => {
+                let list = "";
+                snap.forEach(doc => { let u = doc.data(); list += `<div class="leaderboard-item"><span>${u.name}</span><span>🪙 ${u.coins}</span></div>`; });
+                document.getElementById('leaderboard-list').innerHTML = list;
+            });
+        }
+    }
+
+    function checkBonusStatus() {
+        let lastClaim = parseInt(localStorage.getItem('lastClaimTime'));
+        let now = new Date().getTime();
+        let diff = 3600000 - (now - lastClaim);
+        if (lastClaim && diff > 0) {
+            let m = Math.floor(diff / 60000);
+            let s = Math.floor((diff % 60000) / 1000);
+            document.getElementById('bonus-timer').innerText = m + ":" + (s < 10 ? "0" : "") + s;
+            setTimeout(checkBonusStatus, 1000);
+        } else { document.getElementById('bonus-timer').innerText = "🎁"; }
+    }
+
+    function claimBonus() {
+        let lastClaim = parseInt(localStorage.getItem('lastClaimTime'));
+        if (lastClaim && (new Date().getTime() - lastClaim < 3600000)) { alert("کەمێکی تر وەرە!"); }
+        else { coins += 15; localStorage.setItem('lastClaimTime', new Date().getTime()); saveData(); checkBonusStatus(); }
+    }
+</script>
+</body>
+</html>
