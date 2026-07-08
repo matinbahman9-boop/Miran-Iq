@@ -170,7 +170,7 @@
     const db = firebase.firestore();
     let coins = parseInt(localStorage.getItem('userCoins')) || 50;
     let playerName = localStorage.getItem('playerName') || "";
-    let userCity = localStorage.getItem('userCity') || "نەزانراو";
+let userCity = localStorage.getItem('userCity') || "نەزانراو";
     let gameTimer;
     let timeLeft = 15;
     let xp = parseInt(localStorage.getItem('userXP')) || 0;
@@ -268,11 +268,20 @@ function loadLegendQuestion() {
         loadLegendQuestion();
     }
 
-    function saveData() { 
+        function saveData() { 
         localStorage.setItem('userCoins', coins); 
         document.getElementById('coins').innerText = coins; 
-        db.collection("users").doc(playerName).set({name: playerName, coins: coins, city: localStorage.getItem('userCity'), goals: goals[playerLegend] || 0}, {merge: true}); 
+        
+        db.collection("users").doc(playerName).set({
+            name: playerName, 
+            coins: coins, 
+            city: localStorage.getItem('userCity') || "نەزانراو", 
+            goals: (playerLegend && goals[playerLegend]) ? goals[playerLegend] : 0
+        }, {merge: true}).catch((error) => {
+            console.error("هەڵە لە سەیڤکردن: ", error);
+        });
     }
+
 
     // باقی فەنکشنەکان وەک خۆیان ماونەتەوە...
     function enterKidsScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('kids-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; loadKidsQuestion(); }
