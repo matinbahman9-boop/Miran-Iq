@@ -195,17 +195,52 @@ let userCity = localStorage.getItem('userCity') || "نەزانراو";
     }
 
     function playSound(type) { new Audio(type === 'correct' ? 'https://actions.google.com/sounds/v1/ui/positive_score_feedback.ogg' : 'https://actions.google.com/sounds/v1/ui/negative_score_feedback.ogg').play().catch(e => {}); }
-
-    window.onload = function() {
-        if (!playerName) { 
-            playerName = prompt("ناوی خۆت بنووسە پاڵەوان:") || "یاریزان"; 
-            userCity = prompt("شارەکەت بنووسە:") || "نەزانراو";
-            localStorage.setItem('playerName', playerName); localStorage.setItem('userCity', userCity);
+// فەنکشن بۆ هێنانی داتا بە شێوازێکی یەکپارچە
+function loadUserData(callback) {
+    db.collection("users").doc(playerName).get().then((doc) => {
+        if (doc.exists) {
+            let userData = doc.data();
+            coins = userData.coins;
+            localStorage.setItem('userCoins', coins);
         }
-        document.getElementById('player-name').innerText = playerName;
-        document.getElementById('coins').innerText = coins;
-        setTimeout(() => { document.getElementById('kurdistan-splash').style.opacity = "0"; document.getElementById('kurdistan-splash').style.visibility = "hidden"; document.getElementById('main-content').style.opacity = "1"; }, 2000);
+        if(callback) callback();
+    }).catch((error) => {
+        console.error("هەڵە لە بارکردن: ", error);
+        if(callback) callback();
+    });
+}
+
+// بەشی سەرەکی بارکردنی یارییەکە
+window.onload = function() {
+    // ١. دڵنیابوون لە ناو
+    if (!playerName || playerName === "") { 
+        playerName = prompt("ناوی خۆت بنووسە پاڵەوان:") || "یاریزان"; 
+        userCity = prompt("شارەکەت بنووسە:") || "نەزانراو";
+        localStorage.setItem('playerName', playerName); 
+        localStorage.setItem('userCity', userCity);
     }
+    
+    // ٢. نوێکردنەوەی ناوی سەر شاشە
+    document.getElementById('player-name').innerText = playerName;
+
+    // ٣. هێنانی داتا و دواتر کردنەوەی سکرین
+    loadUserData(() => {
+        document.getElementById('coins').innerText = coins;
+        
+        // ئەم بەشە تەنها دوای هاتنی داتا کار دەکات
+        setTimeout(() => { 
+            let splash = document.getElementById('kurdistan-splash');
+            let main = document.getElementById('main-content');
+            
+            splash.style.opacity = "0"; 
+            splash.style.visibility = "hidden"; 
+            
+            main.style.opacity = "1"; 
+            main.style.display = "block";
+        }, 500);
+    });
+}
+
 
     function enterLegendBattle() {
         if (coins >= 200) {
