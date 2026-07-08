@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>میران IQ - وەشانی پێشکەوتوو</title>
+    <title>میران IQ - </title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #0b0f19; color: #f8fafc; text-align: center; padding: 20px; margin: 0; overflow-x: hidden; }
-        .container { max-width: 450px; margin: 20px auto; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #38bdf8; position: relative; }
+        .container { max-width: 450px; margin: 20px auto; background: #1e293b; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 2px solid #ffd700; position: relative; }
         .back-btn { position: absolute; top: 15px; right: 15px; background: #475569; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; display: none; }
         .profile-box { background: #111827; padding: 10px; border-radius: 12px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
         .coin-box { background: #293548; padding: 8px 15px; border-radius: 30px; color: #fbbf24; font-weight: bold; font-size: 18px; }
         .question-text { font-size: 20px; font-weight: bold; margin: 20px 0; min-height: 60px; color: #f1f5f9; }
         .options-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
         .btn-opt { background: #334155; color: white; border: 2px solid #475569; padding: 15px; font-size: 16px; font-weight: bold; border-radius: 12px; cursor: pointer; text-align: right; transition: 0.2s; }
-        .btn-opt:hover { background: #38bdf8; color: #0b0f19; }
+        .btn-opt:hover { background: #ffd700; color: #0b0f19; }
         #score-status { margin-top: 15px; font-size: 18px; font-weight: bold; padding: 10px; border-radius: 8px; }
         .leaderboard-title { color: #fbbf24; font-size: 18px; font-weight: bold; margin-bottom: 10px; }
         .leaderboard-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1f2937; font-size: 14px; }
-        .rules-list { text-align: right; background: #111827; padding: 15px; border-radius: 12px; margin: 20px 0; border-right: 4px solid #38bdf8; }
-        #kurdistan-splash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #0b0f19; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease-in-out, visibility 0.8s; }
-        @keyframes wave { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.05) rotate(2deg); } }
-        .animated-flag { animation: wave 2s infinite ease-in-out; }
+        .rules-list { text-align: right; background: #111827; padding: 15px; border-radius: 12px; margin: 20px 0; border-right: 4px solid #ffd700; }
+#kurdistan-splash { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: #0b0f19; z-index: 9999; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+}
+
+.animated-flag {
+    width: 220px;
+    height: 220px;
+    /* ئەم وێنەیە ڕاستەوخۆ بە شێوەی بازنەییە و لە ویکپیدیا نییە بەڵام زۆر کوالێتی بەرزە */
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3233/3233513.png');
+    background-size: 80%; /* وێنەکە کەمێک بچووکتر دەکەین بۆ ئەوەی بە تەواوی لە ناو بازنەکە دەربکەوێت */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: white; /* پاشبنەمایەکی سپی بۆ بازنەکە دادەنێین بۆ ئەوەی جوانتر بێت */
+    border-radius: 50%;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 20px rgba(255, 215, 0, 0.3);
+    animation: float-circle 3s ease-in-out infinite;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+@keyframes float-circle {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+}
+
     </style>
 </head>
 <body>
@@ -35,8 +58,8 @@
         </div>
         <div style="background: #278d45; height: 33.3%;"></div>
     </div>
-    <h1 style="font-size: 28px; margin: 0;">میران IQ</h1>
-    <p>بژی کوردستان ☀️</p>
+    <h1 style="font-size: 28px; margin: 0; color: #ffd700;">میران IQ</h1>
+    <p>بژی کوردستان🇹🇯 ☀️</p>
 </div>
 
 <div class="container" id="main-content" style="opacity: 0; transition: opacity 0.8s ease-in-out;">
@@ -44,10 +67,10 @@
 
     <div class="profile-box">
         <div style="display:flex; align-items:center; gap:8px;">
-            <div style="width:20px; height:12px; border-radius:2px; overflow:hidden;">
-                <div style="background:#ed2024; height:33%;"></div><div style="background:#fff; height:34%;"></div><div style="background:#278d45; height:33%;"></div>
+            <span id="player-name" style="color: #ffd700; font-weight: bold;">مێوان</span>
+            <div style="font-size: 11px; color: #fbbf24; margin-right: 5px;">
+                لیڤڵ: <span id="level-text">1</span> | XP: <span id="xp-text">0</span>
             </div>
-            <span id="player-name" style="color: #38bdf8; font-weight: bold;">مێوان</span>
         </div>
         <div style="display:flex; gap:10px; align-items:center;">
             <div id="bonus-timer" style="cursor:pointer; font-size:20px;" onclick="claimBonus()">🎁</div>
@@ -57,38 +80,77 @@
     </div>
 
     <div id="leaderboard-popup" style="display:none; background:#111827; padding:15px; border-radius:12px; margin-bottom:15px; text-align:right;">
-        <div class="leaderboard-title">🏆 تۆپ ١٠ یاریزان</div>
+        <div class="leaderboard-title">🏆 ریزبەندی پاڵەوانەکان</div>
+        <button onclick="loadRank('all')">گشتی</button>
+        <button onclick="loadRank('city')">شارەکەم</button>
         <div id="leaderboard-list"></div>
     </div>
-    
+    <div id="legend-leaderboard" style="display:none; background:#1e293b; padding:15px; border-radius:12px; margin-bottom:15px; text-align:right; border: 1px solid #ffd700;">
+    <div class="leaderboard-title">⚽ لیستی تۆپ گۆڵکاران</div>
+    <div id="legend-rank-list"></div>
+</div>
+
+    <button style="background:#ef4444; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-top:10px;" onclick="enterLegendBattle()">⚽ شەڕی ئەفسانەکان: CR7 vs LM10</button>
+<button onclick="showLegendLeaderboard()" style="width:100%; padding:10px; margin:5px 0; background:#334155; border:none; border-radius:10px;">🏆 بینینی لیستی گۆڵکاران</button>
+
     <div id="start-screen">
-        <h2 style="margin-top: 10px;">بەخێربێیت بۆ یاری میران IQ 🧠</h2>
+        <h2 style="margin-top: 10px; color: #ffd700;">ماڵە گەورەکەی میران IQ 🧠</h2>
         <div class="rules-list">
             <ul>
                 <li>📌 یارییەکە لە کۆمەڵێک پرسیاری بەهێز و هەمەچەشن پێکهاتووە.</li>
                 <li>🪙 تێچووی چوونە ناو یاری ١٠ کۆینە.</li>
-                <li>🎉 بۆ هەر وەڵامێکی ڕاست ١٥ کۆین خەڵات وەردەگریت.</li>
-                <li>❌ ئەگەر وەڵامت هەڵە بێت ٥ کۆین لەدەست دەدەیت.</li>
+                <li>🎉 بۆ هەر وەڵامێکی ڕاست ٢٠ کۆین خەڵات وەردەگریت.</li>
+                <li>❌ ئەگەر وەڵامت هەڵە بێ  ١٥ کۆین لەدەست دەدەیت.</li>
+                <li style="color:#fbbf24; cursor:pointer; list-style-type: '🎁 ';" onclick="claimDailyReward()">وەرگرتنی خەڵاتی ڕۆژانە</li>
             </ul>
         </div>
-        <button style="background:#f472b6; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size: 18px;" onclick="enterKidsScreen()">🧸 بەشی منداڵان</button>
+        <button style="background:#f472b6; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer; margin-bottom:10px; font-size: 18px;" onclick="enterKidsScreen()">🧸 بەشی نەوەکانی داهاتوو</button>
         <button style="background:#22c55e; color:white; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="enterQuizScreen()">🎮 پرسیار و وەڵامی زیرەکانە</button>
     </div>
 
+    <div style="margin-top: 25px; padding: 15px; border-radius: 12px; background: linear-gradient(135deg, #1e293b, #0b0f19); border: 1px solid #ffd700; text-align: center;">
+        <p style="margin: 0; font-size: 13px; color: #94a3b8;">پەرەپێدراوە بە خۆشەویستی لەلایەن:</p>
+        <h3 style="margin: 5px 0 0 0; color: #ffd700; font-size: 18px; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">مـــەتــین بەهــمەن</h3>
+    </div>
+
     <div id="quiz-screen" style="display: none;">
-        <div class="question-text" id="question">ئامادەیت بۆ دەستپێکردنی یاری؟</div>
+        <div id="timer-display" style="color:#ef4444; font-weight:bold; font-size: 18px; margin-bottom: 10px;"></div>
+        <div class="question-text" id="question">ئامادەیت بۆ دەستپێکردنی یاری?</div>
         <div class="options-grid" id="options-box" style="display: none;">
             <button class="btn-opt" onclick="checkAnswer(0)" id="opt0">--</button>
             <button class="btn-opt" onclick="checkAnswer(1)" id="opt1">--</button>
             <button class="btn-opt" onclick="checkAnswer(2)" id="opt2">--</button>
         </div>
-        <button id="start-game-btn" style="background:#38bdf8; color:#0b0f19; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="startMegaGame()">🚀 چوونە ناو پرسیارەکان</button>
+        <button id="start-game-btn" style="background:#ffd700; color:#0b0f19; padding:15px; width:100%; border:none; border-radius:12px; font-weight:bold; cursor:pointer;" onclick="startMegaGame()">🚀 زیرەکیت بسەلمێنە پاڵەوان 🥇</button>
         <div id="score-status"></div>
+    </div>
+    
+    <!-- پەڕەی شەڕی ئەفسانەکان -->
+    <div id="legend-battle-screen" style="display: none; text-align: center;">
+        <h2 style="color: #ffd700;">⚽ شەڕی ئەفسانەکان</h2>
+        <div style="display: flex; justify-content: space-around; margin: 20px 0;">
+            <div style="border: 2px solid #ef4444; padding:10px; border-radius:10px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8c/Cristiano_Ronaldo_2018.jpg" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                <div>رۆناڵدۆ</div>
+                <div id="cr7-score">٠ گۆڵ</div>
+            </div>
+            <div style="border: 2px solid #3b82f6; padding:10px; border-radius:10px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Lionel_Messi_20180626.jpg" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                <div>مێسی</div>
+                <div id="lm10-score">٠ گۆڵ</div>
+            </div>
+        </div>
+        <div class="question-text" id="battle-question">کام ئەفسانە هەڵدەبژێریت؟</div>
+        <div class="options-grid">
+            <button class="btn-opt" onclick="checkLegendAnswer(0)" id="l-opt0">A</button>
+            <button class="btn-opt" onclick="checkLegendAnswer(1)" id="l-opt1">B</button>
+            <button class="btn-opt" onclick="checkLegendAnswer(2)" id="l-opt2">C</button>
+        </div>
     </div>
 
     <div id="kids-screen" style="display: none; text-align: center;">
         <h2 style="color: #fbbf24;">🌟 بەشی چاوگەشەکان</h2>
-        <img id="kids-image" src="" style="width: 180px; height: 180px; border-radius: 20px; margin: 10px auto; border: 3px solid #38bdf8; display: none; object-fit: cover;">
+        <img id="kids-image" src="" style="width: 180px; height: 180px; border-radius: 20px; margin: 10px auto; border: 3px solid #ffd700; display: none; object-fit: cover;">
         <div class="question-text" id="kids-question">...</div>
         <div class="options-grid" id="kids-options-box">
             <button class="btn-opt" onclick="checkKidsAnswer(0)" id="kids-opt0">--</button>
@@ -101,93 +163,138 @@
 
 <script src="kidsQuestions.js"></script>
 <script src="questions.js"></script>
+<script src="legendQuestions.js"></script>
 <script>
     const firebaseConfig = { apiKey: "AIzaSyAcrQob4GvbghvQvbVUj1YxZ5xZ_4WYdPc", authDomain: "miraniq-9e398.firebaseapp.com", projectId: "miraniq-9e398", storageBucket: "miraniq-9e398.firebasestorage.app", messagingSenderId: "1047083057053", appId: "1:1047083057053:web:b64324df6d392fc0ad3974" };
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     let coins = parseInt(localStorage.getItem('userCoins')) || 50;
     let playerName = localStorage.getItem('playerName') || "";
+    let userCity = localStorage.getItem('userCity') || "نەزانراو";
+    let gameTimer;
+    let timeLeft = 15;
+    let xp = parseInt(localStorage.getItem('userXP')) || 0;
+    let level = parseInt(localStorage.getItem('userLevel')) || 1;
     
+    // لۆژیکی نوێکراوی ئەفسانەکان
+    let playerLegend = "";
+    let goals = { cr7: 0, lm10: 0 };
+    let correctAnswersCount = 0;
+
+    function showLegendLeaderboard() {
+        let box = document.getElementById('legend-leaderboard');
+        box.style.display = (box.style.display === "none") ? "block" : "none";
+        db.collection("users").orderBy("goals", "desc").limit(5).get().then(snap => {
+            let list = "";
+            snap.forEach(doc => { 
+                let u = doc.data();
+                if(u.goals > 0) list += `<div class="leaderboard-item"><span>${u.name}</span><span>⚽ ${u.goals}</span></div>`;
+            });
+            document.getElementById('legend-rank-list').innerHTML = list || "هێشتا کەس گۆڵی نەکردووە!";
+        });
+    }
+
+    function playSound(type) { new Audio(type === 'correct' ? 'https://actions.google.com/sounds/v1/ui/positive_score_feedback.ogg' : 'https://actions.google.com/sounds/v1/ui/negative_score_feedback.ogg').play().catch(e => {}); }
+
     window.onload = function() {
-        if (!playerName) { playerName = prompt("ناوی خۆت بنووسە:") || "یاریزان"; localStorage.setItem('playerName', playerName); }
+        if (!playerName) { 
+            playerName = prompt("ناوی خۆت بنووسە پاڵەوان:") || "یاریزان"; 
+            userCity = prompt("شارەکەت بنووسە:") || "نەزانراو";
+            localStorage.setItem('playerName', playerName); localStorage.setItem('userCity', userCity);
+        }
         document.getElementById('player-name').innerText = playerName;
         document.getElementById('coins').innerText = coins;
-        checkBonusStatus();
         setTimeout(() => { document.getElementById('kurdistan-splash').style.opacity = "0"; document.getElementById('kurdistan-splash').style.visibility = "hidden"; document.getElementById('main-content').style.opacity = "1"; }, 2000);
     }
 
-    function enterKidsScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('kids-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; loadKidsQuestion(); }
-    function enterQuizScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('quiz-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; }
-
-    function loadKidsQuestion() {
-        let q = kidsQuestionsDatabase[Math.floor(Math.random() * kidsQuestionsDatabase.length)];
-        let imgElement = document.getElementById('kids-image');
-        document.getElementById('kids-question').innerText = q.q;
-        if(q.image) { imgElement.src = q.image; imgElement.style.display = "block"; } else { imgElement.style.display = "none"; }
-        for(let i=0; i<3; i++) document.getElementById('kids-opt'+i).innerText = q.opts[i];
-        window.kidsCorrectAnswer = q.correct;
-    }
-
-    function checkKidsAnswer(idx) {
-        let statusDiv = document.getElementById('kids-status');
-        if(idx === window.kidsCorrectAnswer) {
-            statusDiv.innerHTML = "✅ دەستخۆش!<br><img src='https://media.giphy.com/media/3o7TKMGpxxHOGTdzJC/giphy.gif' style='width:100px; border-radius:10px;'>";
-            statusDiv.style.color = "#22c55e";
+    function enterLegendBattle() {
+        if (coins >= 200) {
+            coins -= 200;
+            saveData();
+            playerLegend = confirm("بۆ رۆناڵدۆ (OK) و بۆ مێسی (Cancel) دابگرە") ? 'cr7' : 'lm10';
+            document.getElementById('start-screen').style.display = "none";
+            document.getElementById('legend-battle-screen').style.display = "block";
+            document.getElementById('back-btn').style.display = "block";
+            loadLegendQuestion();
         } else {
-            statusDiv.innerHTML = "❌ بەداخەوە! هەوڵ بدەرەوە<br><img src='https://media.giphy.com/media/l3q2VmU3K2R3i07hS/giphy.gif' style='width:100px; border-radius:10px;'>";
-            statusDiv.style.color = "#ef4444";
+            alert("پێویستت بە ٢٠٠ کۆینە بۆ چوونە ژوورەوە!");
         }
-        setTimeout(() => { statusDiv.innerHTML = ""; loadKidsQuestion(); }, 2000);
     }
 
-    function checkAnswer(idx) {
-        let statusDiv = document.getElementById('score-status');
-        if(idx === window.correctAnswerIndex) {
-            coins += 15;
-            statusDiv.innerHTML = "🎉 پیرۆزە! ١٥ خاڵت زیاد کرد";
-            statusDiv.style.color = "#22c55e";
+// ئەم گۆڕاوە لە سەرەوەی سکریپتەکە دابنێ (لەگەڵ coins و ئەوانی تر)
+let usedLegendQuestions = []; 
+
+function loadLegendQuestion() {
+    // ئەگەر هەموو پرسیارەکان بەکارهاتن، لیستەکە پاک بکەرەوە
+    if (usedLegendQuestions.length >= megaQuestionsDatabase.length) {
+        usedLegendQuestions = [];
+    }
+
+    let q;
+    do {
+        // پرسیارێکی هەڕەمەکی هەڵبژێرە
+        q = megaQuestionsDatabase[Math.floor(Math.random() * megaQuestionsDatabase.length)];
+    } while (usedLegendQuestions.includes(q.q)); // دڵنیابە پرسیارەکە پێشتر بەکارنەهاتووە
+
+    usedLegendQuestions.push(q.q); // پرسیارەکە زیاد بکە بۆ لیستەکە
+
+    document.getElementById('battle-question').innerText = q.q;
+    for(let i=0; i<3; i++) {
+        document.getElementById('l-opt'+i).innerText = q.opts[i];
+    }
+    window.legendCorrect = q.correct;
+}
+
+    function checkLegendAnswer(idx) {
+        if(idx === window.legendCorrect) {
+            goals[playerLegend]++;
+            correctAnswersCount++;
+            coins += 50;
+            document.getElementById(playerLegend + '-score').innerText = goals[playerLegend] + " گۆڵ";
+            playSound('correct');
+            alert("پیرۆزە! گۆڵێکی نایابت کرد، ٥٠ کۆینت وەرگرت! 🎉");
+            
+            if(correctAnswersCount === 10) {
+                coins += 500;
+                correctAnswersCount = 0;
+                alert("دەستخۆش! گەیشتیت بە ١٠ وەڵامی ڕاست، ٥٠٠ کۆینی دیاریت وەرگرت! 🏆");
+            }
         } else {
-            coins = Math.max(0, coins - 5);
-            statusDiv.innerHTML = "😔 بەداخەوە! ٥ خاڵت کەم کرد";
-            statusDiv.style.color = "#ef4444";
+            coins = Math.max(0, coins - 40);
+            playSound('wrong');
+            alert("بەداخەوە! هەڵە بوو، ٤٠ کۆینت لەدەستدا. ❌");
         }
         saveData();
-        setTimeout(loadNextUniqueQuestion, 1500);
+        loadLegendQuestion();
     }
 
-    function saveData() { localStorage.setItem('userCoins', coins); document.getElementById('coins').innerText = coins; db.collection("users").doc(playerName).set({name: playerName, coins: coins}); }
-    function startMegaGame() { if(coins < 10) { alert("کۆینی پێویستت نییە!"); return; } coins -= 10; saveData(); document.getElementById('start-game-btn').style.display = "none"; document.getElementById('options-box').style.display = "grid"; loadNextUniqueQuestion(); }
+    function saveData() { 
+        localStorage.setItem('userCoins', coins); 
+        document.getElementById('coins').innerText = coins; 
+        db.collection("users").doc(playerName).set({name: playerName, coins: coins, city: localStorage.getItem('userCity'), goals: goals[playerLegend] || 0}, {merge: true}); 
+    }
+
+    // باقی فەنکشنەکان وەک خۆیان ماونەتەوە...
+    function enterKidsScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('kids-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; loadKidsQuestion(); }
+    function enterQuizScreen() { document.getElementById('start-screen').style.display = "none"; document.getElementById('quiz-screen').style.display = "block"; document.getElementById('back-btn').style.display = "block"; }
+    function loadKidsQuestion() { let q = kidsQuestionsDatabase[Math.floor(Math.random() * kidsQuestionsDatabase.length)]; document.getElementById('kids-question').innerText = q.q; for(let i=0; i<3; i++) document.getElementById('kids-opt'+i).innerText = q.opts[i]; window.kidsCorrectAnswer = q.correct; }
+    function checkKidsAnswer(idx) { let statusDiv = document.getElementById('kids-status'); if(idx === window.kidsCorrectAnswer) { playSound('correct'); statusDiv.innerHTML = "✅ ڕاستە نەوەی داهاتوو 🎊"; statusDiv.style.color = "#22c55e"; } else { playSound('wrong'); statusDiv.innerHTML = "❌ کۆڵمەدە تۆ هیوایی داهاتووی 👑"; statusDiv.style.color = "#ef4444"; } setTimeout(() => { statusDiv.innerHTML = ""; loadKidsQuestion(); }, 1500); }
+    function startMegaGame() { if(coins < 10) return; coins -= 10; saveData(); document.getElementById('start-game-btn').style.display = "none"; document.getElementById('options-box').style.display = "grid"; loadNextUniqueQuestion(); startTimer(); }
     function loadNextUniqueQuestion() { let q = megaQuestionsDatabase[Math.floor(Math.random() * megaQuestionsDatabase.length)]; document.getElementById('question').innerText = q.q; for(let i=0; i<3; i++) document.getElementById('opt'+i).innerText = q.opts[i]; window.correctAnswerIndex = q.correct; }
-    
-    function toggleLeaderboard() {
-        let box = document.getElementById('leaderboard-popup');
-        box.style.display = (box.style.display === "none") ? "block" : "none";
-        if(box.style.display === "block") {
-            db.collection("users").orderBy("coins", "desc").limit(10).get().then(snap => {
-                let list = "";
-                snap.forEach(doc => { let u = doc.data(); list += `<div class="leaderboard-item"><span>${u.name}</span><span>🪙 ${u.coins}</span></div>`; });
-                document.getElementById('leaderboard-list').innerHTML = list;
-            });
-        }
-    }
+    function checkAnswer(idx) { clearInterval(gameTimer); let statusDiv = document.getElementById('score-status'); if(idx === window.correctAnswerIndex) { playSound('correct'); coins += 20; statusDiv.innerHTML = "✅ ڕاستە پاڵەوان 🥇"; statusDiv.style.color = "#22c55e"; } else { playSound('wrong'); coins = Math.max(0, coins - 15); statusDiv.innerHTML = "❌ کۆڵمەدە پاڵەوان❤️ "; statusDiv.style.color = "#ef4444"; } saveData(); setTimeout(() => { statusDiv.innerHTML = ""; loadNextUniqueQuestion(); startTimer(); }, 1500); }
+    function startTimer() { timeLeft = 15; clearInterval(gameTimer); gameTimer = setInterval(() => { timeLeft--; document.getElementById('timer-display').innerText = "⏳ " + timeLeft; if(timeLeft <= 0) { clearInterval(gameTimer); checkAnswer(-1); } }, 1000); }
+    function toggleLeaderboard() { let box = document.getElementById('leaderboard-popup'); box.style.display = (box.style.display === "none") ? "block" : "none"; }
+    function loadRank(type) { let q = db.collection("users").orderBy("coins", "desc").limit(10); if(type === 'city') q = db.collection("users").where("city", "==", localStorage.getItem('userCity')).orderBy("coins", "desc"); q.get().then(snap => { let list = ""; snap.forEach(doc => { let u = doc.data(); list += `<div class="leaderboard-item"><span>${u.name}</span><span>🪙 ${u.coins}</span></div>`; }); document.getElementById('leaderboard-list').innerHTML = list; }); }
+    function claimBonus() { let lastBonus = localStorage.getItem('lastBonusDate'); let today = new Date().toDateString(); if (lastBonus === today) { alert("تۆ ئەمڕۆ ئەم خەڵاتەت وەرگرتووە!"); return; } coins += 15; localStorage.setItem('lastBonusDate', today); saveData(); alert("١٥ کۆینت بۆ زیاد بوو!"); }
+    function claimDailyReward() { let lastDaily = localStorage.getItem('lastDailyDate'); let today = new Date().toDateString(); if (lastDaily === today) { alert("تۆ ئەمڕۆ ئەم خەڵاتەت وەرگرتووە!"); return; } coins += 50; localStorage.setItem('lastDailyDate', today); saveData(); alert("٥٠ کۆینت بۆ زیاد بوو!"); }
+function loadLegendQuestion() {
+    let q = legendQuestionsDatabase[Math.floor(Math.random() * legendQuestionsDatabase.length)];
+    document.getElementById('battle-question').innerText = q.q;
+    for(let i=0; i<3; i++) document.getElementById('l-opt'+i).innerText = q.opts[i];
+    window.legendCorrect = q.correct;
+}
 
-    function checkBonusStatus() {
-        let lastClaim = parseInt(localStorage.getItem('lastClaimTime'));
-        let now = new Date().getTime();
-        let diff = 3600000 - (now - lastClaim);
-        if (lastClaim && diff > 0) {
-            let m = Math.floor(diff / 60000);
-            let s = Math.floor((diff % 60000) / 1000);
-            document.getElementById('bonus-timer').innerText = m + ":" + (s < 10 ? "0" : "") + s;
-            setTimeout(checkBonusStatus, 1000);
-        } else { document.getElementById('bonus-timer').innerText = "🎁"; }
-    }
 
-    function claimBonus() {
-        let lastClaim = parseInt(localStorage.getItem('lastClaimTime'));
-        if (lastClaim && (new Date().getTime() - lastClaim < 3600000)) { alert("کەمێکی تر وەرە!"); }
-        else { coins += 15; localStorage.setItem('lastClaimTime', new Date().getTime()); saveData(); checkBonusStatus(); }
-    }
 </script>
 </body>
 </html>
